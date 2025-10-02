@@ -35,20 +35,6 @@ En conjunto, la solución no solo funciona como una tienda virtual de productos 
 ### Estilo Arquitectónico
 Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **servicios**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en verde en el diagrama.
 
-### Componentes y Conectores
-- **Frontend Web**: Un único componente front, tal como se decribe en SOFEA, haciendo uso de Nuxt.js, que abarcará toda la UI del sistema.
-- **APIs**: Una API para cada servicio, usando NestJS, que se conectará con la respectivas bases de datos.
-- **Base de datos - Inventario**: Una base de datos relacional en PostgreSQL, para el servicio de **inventario**.
-- **Base de datos - Servicios**: Una base de datos no relacional en Mongo, para el servicio de **servicios**.
-<br>
-
-<br>
-
-- **HTTP-REST**: Conector entre frontend y backend del servicio de **inventario**.
-- **HTTP-GraphQL**: Conector entre frontend y backend del servicio de **servicios**.
-- **Prisma**: Conector entre las APIs y las bases de datos.
-
----
 
 ### Identificación de elementos arquitectónicos
 - 5 Componentes y 4 conectores
@@ -72,9 +58,6 @@ Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servic
 | **GraphQL** | Permitir que desde el frontend unl cliente web envíe consultas y mutaciones al servidor GraphQL. | Supeditado a la interfaz HTTP/GraphQL; no gestiona persistencia ni lógica interna del backend. | HTTP sobre puerto `8000`. |
 | **REST** | Permitir que el cliente web realice peticiones GET y POST al servidor REST. | Supeditado a la interfaz HTTP/REST; no gestiona persistencia ni lógica interna del backend. | HTTP sobre puerto `8001`. |
 
-### Vista de Componentes y Conectores
-<img src="_______.png" alt="Diagrama C&C" width="800" height="600" />
-
 
 ### Relaciones entre Componentes
 
@@ -90,9 +73,9 @@ Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servic
 - **User Interface ↔ Gestión de Inventario:**  
   El cliente web consume la API REST expuesta por el componente de Gestión de Inventario a través de HTTP en el puerto 8001.
 
----
 
-# Descargar y desplegar el repositorio
+
+# Instrucciones para despliegue del software de manera local
 
 ## Requisitos previos
 1. **Git** instalado y accesible desde la terminal.
