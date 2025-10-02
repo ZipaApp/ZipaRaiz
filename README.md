@@ -33,7 +33,7 @@ En conjunto, la solución no solo funciona como una tienda virtual de productos 
 </div>
 
 ### Estilo Arquitectónico
-Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **servicios**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en verde en el diagrama.
+Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **servicios**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en **verde** en el diagrama.
 
 
 ### Identificación de elementos arquitectónicos
