@@ -3,7 +3,7 @@
   <h1 style="margin: 0;">PetShop o tienda de productos y servicios para mascotas</h2>
 </div>
 
-
+## Nombre del proyecto ZIPA
 ## Equipo 2D
 - Victor Manuel Torres Alonso
 - Diego Humberto Lavado González
@@ -80,7 +80,6 @@ Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servic
 ## Requisitos previos
 1. **Git** instalado y accesible desde la terminal.
 2. **Docker** y **Docker Compose** instalados y configurados correctamente.
----
 
 ## Instrucciones paso a paso
 
