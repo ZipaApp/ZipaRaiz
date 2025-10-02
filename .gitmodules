@@ -10,3 +10,6 @@
 [submodule "Zipa_UI"]
 	path = Zipa_UI
 	url = https://github.com/ZipaApp/Zipa_UI.git
+[submodule "Zipa_DBServicio"]
+	path = Zipa_DBServicio
+	url = https://github.com/ZipaApp/Zipa_DBServicio.git
