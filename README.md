@@ -48,3 +48,21 @@ Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servic
 - **HTTP-GraphQL**: Conector entre frontend y backend del servicio de **servicios**.
 - **Prisma**: Conector entre las APIs y las bases de datos.
 
+# Descargar y desplegar el repositorio
+
+## Requisitos previos
+1. **Git** instalado y accesible desde la terminal.
+2. **Docker** y **Docker Compose** instalados y configurados correctamente.
+---
+
+## Instrucciones paso a paso
+
+### 1. Clonar el repositorio con submódulos
+
+```bash
+git clone --recurse-submodules https://github.com/ZipaApp/ZipaRaiz.git
+```
+###  2. Construir y montar el contenedor en docker
+```bash
+docker compose up --build
+```
