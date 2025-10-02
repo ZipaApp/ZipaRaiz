@@ -33,7 +33,7 @@ En conjunto, la solución no solo funciona como una tienda virtual de productos 
 </div>
 
 ### Estilo Arquitectónico
-Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **stock**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en verde en el diagrama.
+Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **servicios**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en verde en el diagrama.
 
 ### Componentes y Conectores
 - **Frontend Web**: Un único componente front, tal como se decribe en SOFEA, haciendo uso de Nuxt.js, que abarcará toda la UI del sistema.
