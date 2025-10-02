@@ -1,5 +1,5 @@
 services:
-  # Servicio de base de datos
+  # Servicio de base de datos PostgreSQL
   db:
     image: postgres:15
     container_name: postgres_db
@@ -16,14 +16,13 @@ services:
 
   # Servicio del backend NestJS
   inventory-api:
-    build: ./Zipa_Inventario
+    build: ./Zipa_Inventory
     container_name: inventory_api
     restart: always
     command: npm run start:dev
     ports:
       - "3000:3000"
     environment:
-      # Variables de conexión a la base
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -34,10 +33,26 @@ services:
     networks:
       - backend
 
+  # Servicio de MongoDB para tipos de servicios clínicos
+  mongo:
+    image: mongo:7
+    container_name: mongo_services
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: ecommerce_services
+    volumes:
+      - mongo_data:/data/db
+      - ./Zipa_DBServicio:/docker-entrypoint-initdb.d  # Inicializa los servicios clínicos
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
 
 volumes:
   db_data:
+  mongo_data:
 
