@@ -1,3 +1,12 @@
 [submodule "Zipa_DBInventario"]
 	path = Zipa_DBInventario
 	url = https://github.com/ZipaApp/Zipa_DBInventario.git
+[submodule "Zipa_Inventario"]
+	path = Zipa_Inventario
+	url = https://github.com/ZipaApp/Zipa_Inventario.git
+[submodule "Zipa_Servicios"]
+	path = Zipa_Servicios
+	url = https://github.com/ZipaApp/Zipa_Servicios.git
+[submodule "Zipa_UI"]
+	path = Zipa_UI
+	url = https://github.com/ZipaApp/Zipa_UI.git
