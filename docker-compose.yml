@@ -16,7 +16,7 @@ services:
 
   # Servicio del backend NestJS para inventario
   inventory-api:
-    build: ./Zipa_Inventory
+    build: ./Zipa_Inventario
     container_name: inventory_api
     restart: always
     command: npm run start:dev
@@ -50,7 +50,7 @@ services:
 
   # Servicio del backend NestJS para servicios clínicos
   servicios-api:
-    build: ./Zipa_servicio
+    build: ./Zipa_Servicios
     container_name: servicios_api
     restart: always
     ports:
