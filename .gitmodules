@@ -1,15 +1,20 @@
 [submodule "Zipa_DBInventario"]
 	path = Zipa_DBInventario
 	url = https://github.com/ZipaApp/Zipa_DBInventario.git
+ branch=main
 [submodule "Zipa_Inventario"]
 	path = Zipa_Inventario
 	url = https://github.com/ZipaApp/Zipa_Inventario.git
+ branch=main
 [submodule "Zipa_Servicios"]
 	path = Zipa_Servicios
 	url = https://github.com/ZipaApp/Zipa_Servicios.git
+ branch=main
 [submodule "Zipa_UI"]
 	path = Zipa_UI
 	url = https://github.com/ZipaApp/Zipa_UI.git
+ branch=main
 [submodule "Zipa_DBServicio"]
 	path = Zipa_DBServicio
 	url = https://github.com/ZipaApp/Zipa_DBServicio.git
+ branch=main
