@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/Logo.png" alt="Mi logo" style="width:150px; margin-right:20px;">
-  <h1 style="margin: 0;">Tienda de productos y servicos para mascotas</h2>
+  <h1 style="margin: 0;">PetShop o tienda de productos y servicios para mascotas</h2>
 </div>
 
 
