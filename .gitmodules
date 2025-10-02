@@ -1,0 +1,3 @@
+[submodule "Zipa_DBInventario"]
+	path = Zipa_DBInventario
+	url = https://github.com/ZipaApp/Zipa_DBInventario.git
