@@ -48,6 +48,50 @@ Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servic
 - **HTTP-GraphQL**: Conector entre frontend y backend del servicio de **servicios**.
 - **Prisma**: Conector entre las APIs y las bases de datos.
 
+---
+
+### Identificación de elementos arquitectónicos
+- 5 Componentes y 4 conectores
+
+### Tabla de Componentes
+
+| Componente                 | Responsabilidad                              | Límites                                   | Interfaz                          |
+|----------------------------|----------------------------------------------|-------------------------------------------|------------------------------------|
+| **Historial de servicios: Base de Datos MongoDB** | Almacenar y gestionar datos NoSQL para el sistema Zipa. | Expone operaciones de base de datos a través del puerto 27017, más no lógica de negocio. | Protocolo TCP en el puerto `27017`. |
+| **Gestión de servicios: API Backend (GraphQL)** | Provee una API GraphQL para realizar los queris, mutaciones y suscripciones a través del backend con los datos almacenados en la BD NoSQL Historial de Servicios. | No gestiona interacciones directas de persistencia; delega persistencia a MongoDB. Expone únicamente la lógica de negocio hacia los servicios GraphQL. | HTTP (GraphQL) en el puerto `8000`. |
+| **Productos: Base de Datos PosgresQL** | Almacena y gestiona datos estructurados (SQL) para el sistema. | Solo expone operaciones de base de datos a través del puerto 5432. No expone lógica de negocio. | Protocolo TCP en el puerto `5432` (PosgresQL). |
+| **Gestión de Inventario: API Backend (REST)** | Proveer una API REST para el acceso y manipulación de datos almacenados en PosgresQL. | No gestiona almacenamiento directo; delega persistencia a PosgresQL. Expone únicamente la lógica de negocio y los servicios REST. | HTTP (REST) en el puerto `8001`. |
+| **Navegador web**    | Consumir las APIs expuestas por los componentes de Gestión de Servicios  y Gestión de Inventario. | No hace persistencia ni ejecuta lógica de negocio del backend. | HTTP --> GraphQL y REST. |
+
+### Tabla de Conectores
+
+| Conector                              | Responsabilidad                              | Límites                                   | Interfaz                          |
+|---------------------------------------|----------------------------------------------|-------------------------------------------|------------------------------------|
+| **TCP - MongoDB Driver** | Facilita la comunicación entre el backend GraphQL y MongoDB para operaciones de persistencia con datos NoSQL. | Supeditado a las capacidades del protocolo o driver de MongoDB; no gestiona lógica de negocio. | Protocolo TCP sobre puerto `27017`. |
+| **TCP - PosgresQL Driver** | Facilitar la comunicación entre el backend REST y PosgresQL para operaciones de persistencia con datos de tipo relacional. | Supeditado a las capacidades del protocolo PosgresQL; no gestiona lógica de negocio. | Protocolo TCP sobre puerto `5432`. |
+| **GraphQL** | Permitir que desde el frontend unl cliente web envíe consultas y mutaciones al servidor GraphQL. | Supeditado a la interfaz HTTP/GraphQL; no gestiona persistencia ni lógica interna del backend. | HTTP sobre puerto `8000`. |
+| **REST** | Permitir que el cliente web realice peticiones GET y POST al servidor REST. | Supeditado a la interfaz HTTP/REST; no gestiona persistencia ni lógica interna del backend. | HTTP sobre puerto `8001`. |
+
+### Vista de Componentes y Conectores
+<img src="_______.png" alt="Diagrama C&C" width="800" height="600" />
+
+
+### Relaciones entre Componentes
+
+- **Gestión de servicios ↔ Historial de servicios:**  
+  El componente de Gestión de Servicios se conecta a la BD MongoDB usando el protocolo TCP para operaciones de persistencia sobre los datos NoSQL.
+
+- **Gestión de Inventario ↔ Productos:**  
+  El componente de Gestión de Inventarios se conecta al servidor de PosgresQL usando el protocolo TCP para operaciones de persistencia con los datos SQL.
+
+- **User Interface ↔ Gestión de servicios:**  
+  El cliente web consume la API GraphQL expuesta por el componente de Gestión de servicios a través de HTTP en el puerto 8000.
+
+- **User Interface ↔ Gestión de Inventario:**  
+  El cliente web consume la API REST expuesta por el componente de Gestión de Inventario a través de HTTP en el puerto 8001.
+
+---
+
 # Descargar y desplegar el repositorio
 
 ## Requisitos previos
