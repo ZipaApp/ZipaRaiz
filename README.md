@@ -27,7 +27,7 @@ En conjunto, la solución no solo funciona como una tienda virtual de productos 
 
 ## Arquitectura
 
-### Diagrama de componentes
+### Vista de componentes y conectores
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/Componentes.png" alt="Mi logo" style="width:1500px;">
 </div>
