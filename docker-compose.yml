@@ -14,7 +14,7 @@ services:
     networks:
       - backend
 
-  # Servicio del backend NestJS
+  # Servicio del backend NestJS para inventario
   inventory-api:
     build: ./Zipa_Inventory
     container_name: inventory_api
@@ -48,6 +48,20 @@ services:
     networks:
       - backend
 
+  # Servicio del backend NestJS para servicios clínicos
+  servicios-api:
+    build: ./Zipa_servicio
+    container_name: servicios_api
+    restart: always
+    ports:
+      - "3001:3000"  # Puerto distinto para no chocar con inventory-api
+    environment:
+      MONGO_URI: mongodb://mongo:27017/ecommerce_services
+    depends_on:
+      - mongo
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
@@ -55,4 +69,3 @@ networks:
 volumes:
   db_data:
   mongo_data:
-
