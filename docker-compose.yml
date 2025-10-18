@@ -1,5 +1,7 @@
 services:
-  # Servicio de base de datos PostgreSQL
+  # ===============================
+  # Base de datos PostgreSQL para Inventario
+  # ===============================
   db:
     image: postgres:15
     container_name: postgres_db
@@ -14,7 +16,9 @@ services:
     networks:
       - backend
 
-  # Servicio del backend NestJS para inventario
+  # ===============================
+  # Backend Inventario (NestJS)
+  # ===============================
   inventory-api:
     build: ./Zipa_Inventario
     container_name: inventory_api
@@ -33,7 +37,9 @@ services:
     networks:
       - backend
 
-  # Servicio de MongoDB para tipos de servicios clínicos
+  # ===============================
+  # Base de datos MongoDB para Servicios Clínicos
+  # ===============================
   mongo:
     image: mongo:7
     container_name: mongo_services
@@ -44,17 +50,19 @@ services:
       MONGO_INITDB_DATABASE: ecommerce_services
     volumes:
       - mongo_data:/data/db
-      - ./Zipa_DBServicio:/docker-entrypoint-initdb.d  # Inicializa los servicios clínicos
+      - ./Zipa_DBServicio:/docker-entrypoint-initdb.d
     networks:
       - backend
 
-  # Servicio del backend NestJS para servicios clínicos
+  # ===============================
+  # Backend Servicios Clínicos (NestJS)
+  # ===============================
   servicios-api:
     build: ./Zipa_Servicios
     container_name: servicios_api
     restart: always
     ports:
-      - "3001:3000"  # Puerto distinto para no chocar con inventory-api
+      - "3001:3000"
     environment:
       MONGO_URI: mongodb://mongo:27017/ecommerce_services
     depends_on:
@@ -62,6 +70,38 @@ services:
     networks:
       - backend
 
+  # ===============================
+  # Base de datos PostgreSQL para Usuarios
+  # ===============================
+  user-db:
+    image: postgres:15
+    container_name: postgres_user_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${USER_DB_USER}
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+      POSTGRES_DB: ${USER_DB_NAME}
+    volumes:
+      - ./Zipa_DBAuth/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - user_db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # ===============================
+  # Redis para tokens y sesiones
+  # ===============================
+  redis:
+    image: redis:7
+    container_name: redis_user_service
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+# ===============================
+# 🔗 Red y volúmenes
+# ===============================
 networks:
   backend:
     driver: bridge
@@ -69,3 +109,5 @@ networks:
 volumes:
   db_data:
   mongo_data:
+  user_db_data:
+
