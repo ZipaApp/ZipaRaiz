@@ -18,3 +18,6 @@
 	path = Zipa_DBServicio
 	url = https://github.com/ZipaApp/Zipa_DBServicio.git
 	branch=main
+[submodule "Zipa_DBAuth"]
+	path = Zipa_DBAuth
+	url = git@github.com:ZipaApp/Zipa_DBAuth.git
