@@ -27,3 +27,6 @@
 [submodule "Zipa_OrdenesCompra"]
 	path = Zipa_OrdenesCompra
 	url = git@github.com:ZipaApp/Zipa_OrdenesCompra.git
+[submodule "Zipa_Notificaciones"]
+	path = Zipa_Notificaciones
+	url = git@github.com:ZipaApp/Zipa_Notificaciones.git
