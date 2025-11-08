@@ -21,3 +21,9 @@
 [submodule "Zipa_DBAuth"]
 	path = Zipa_DBAuth
 	url = git@github.com:ZipaApp/Zipa_DBAuth.git
+[submodule "Zipa_Auth"]
+	path = Zipa_Auth
+	url = git@github.com:ZipaApp/Zipa_Auth.git
+[submodule "Zipa_OrdenesCompra"]
+	path = Zipa_OrdenesCompra
+	url = git@github.com:ZipaApp/Zipa_OrdenesCompra.git
