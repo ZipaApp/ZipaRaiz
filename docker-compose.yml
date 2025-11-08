@@ -98,7 +98,35 @@ services:
       - "6379:6379"
     networks:
       - backend
-
+      
+  # ===============================
+  # Backend Usuarios / Auth (NestJS)
+  # ===============================
+  auth-api:
+    build: ./Zipa_Auth
+    container_name: auth_api
+    restart: always
+    command: npm run start:dev
+    ports:
+      - "3002:3000"
+    environment:
+      USER_DB_USER: ${USER_DB_USER}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD}
+      USER_DB_NAME: ${USER_DB_NAME}
+      USER_DB_HOST: user-db
+      USER_DB_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
+    depends_on:
+      - user-db
+      - redis
+    networks:
+      - backend
+      
 # ===============================
 # 🔗 Red y volúmenes
 # ===============================
