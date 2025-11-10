@@ -98,7 +98,7 @@ services:
       - "6379:6379"
     networks:
       - backend
-      
+
   # ===============================
   # Backend Usuarios / Auth (NestJS)
   # ===============================
@@ -127,6 +127,51 @@ services:
     networks:
       - backend
       
+  # ===============================
+  # Rabbit Notificaciones
+  # ===============================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+      
+  # ===============================
+  # MongoDB para Notificaciones
+  # ===============================
+  mongo_notificaciones:
+    image: mongo:7
+    container_name: mongo_notificaciones
+    restart: always
+    ports:
+      - "27018:27017" # expone en otro puerto para no chocar con el mongo de servicios
+    environment:
+      MONGO_INITDB_DATABASE: notificaciones
+    volumes:
+      - mongo_notificaciones_data:/data/db
+    networks:
+      - backend
+      
+  # ===============================
+  # Microservicio Notificaciones (NestJS)
+  # ===============================
+  notificaciones-api:
+    build: ./Zipa_Notificaciones
+    container_name: notificaciones_api
+    restart: always
+    environment:
+      MONGO_URI: mongodb://mongo:27017/notificaciones
+      RABBITMQ_URI: amqp://rabbitmq:5672
+      RABBITMQ_QUEUE: notificaciones_queue
+    depends_on:
+      - mongo_notificaciones
+      - rabbitmq
+    networks:
+      - backend
+      
 # ===============================
 # 🔗 Red y volúmenes
 # ===============================
@@ -138,4 +183,4 @@ volumes:
   db_data:
   mongo_data:
   user_db_data:
-
+  mongo_notificaciones_data:
