@@ -1,5 +1,19 @@
 services:
   # ===============================
+  # Reverse Proxy
+  # ===============================
+  nginx:
+    build: ./Zipa_ReverseProxy
+    container_name: zipa_nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - inventory-api
+    networks:
+      - backend
+  
+  # ===============================
   # Base de datos PostgreSQL para Inventario
   # ===============================
   db:
@@ -173,7 +187,7 @@ services:
       - backend
       
 # ===============================
-# 🔗 Red y volúmenes
+# Red y volúmenes
 # ===============================
 networks:
   backend:
