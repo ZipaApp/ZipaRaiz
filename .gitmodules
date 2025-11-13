@@ -1,35 +1,35 @@
 [submodule "Zipa_DBInventario"]
 	path = Zipa_DBInventario
-	url = git@github.com:ZipaApp/Zipa_DBInventario.git
-	branch=main
+	url = https://github.com/ZipaApp/Zipa_DBInventario.git
+	branch = main
 [submodule "Zipa_Inventario"]
 	path = Zipa_Inventario
-	url = git@github.com:ZipaApp/Zipa_Inventario.git
+	url = https://github.com/ZipaApp/Zipa_Inventario.git
 	branch=main
 [submodule "Zipa_Servicios"]
 	path = Zipa_Servicios
-	url = git@github.com:ZipaApp/Zipa_Servicios.git
-	branch=main
+	url = https://github.com/ZipaApp/Zipa_Servicios.git
+	branch = main
 [submodule "Zipa_UI"]
 	path = Zipa_UI
-	url = git@github.com:ZipaApp/Zipa_UI.git
+	url = https://github.com/ZipaApp/Zipa_UI.git
 	branch=develop
 [submodule "Zipa_DBServicio"]
 	path = Zipa_DBServicio
-	url = git@github.com:ZipaApp/Zipa_DBServicio.git
+	url = https://github.com/ZipaApp/Zipa_DBServicio.git
 	branch=main
 [submodule "Zipa_DBAuth"]
 	path = Zipa_DBAuth
-	url = git@github.com:ZipaApp/Zipa_DBAuth.git
+	url = https://github.com/ZipaApp/Zipa_DBAuth.git
 [submodule "Zipa_Auth"]
 	path = Zipa_Auth
-	url = git@github.com:ZipaApp/Zipa_Auth.git
+	url = https://github.com/ZipaApp/Zipa_Auth.git
 [submodule "Zipa_OrdenesCompra"]
 	path = Zipa_OrdenesCompra
-	url = git@github.com:ZipaApp/Zipa_OrdenesCompra.git
+	url = https://github.com/ZipaApp/Zipa_OrdenesCompra.git
 [submodule "Zipa_Notificaciones"]
 	path = Zipa_Notificaciones
-	url = git@github.com:ZipaApp/Zipa_Notificaciones.git
+	url = https://github.com/ZipaApp/Zipa_Notificaciones.git
 [submodule "Zipa_APIGateway"]
 	path = Zipa_APIGateway
-	url = git@github.com:ZipaApp/Zipa_APIGateway.git
+	url = https://github.com/ZipaApp/Zipa_APIGateway.git
