@@ -30,3 +30,6 @@
 [submodule "Zipa_Notificaciones"]
 	path = Zipa_Notificaciones
 	url = git@github.com:ZipaApp/Zipa_Notificaciones.git
+[submodule "Zipa_APIGateway"]
+	path = Zipa_APIGateway
+	url = git@github.com:ZipaApp/Zipa_APIGateway.git
