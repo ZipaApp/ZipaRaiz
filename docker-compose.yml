@@ -35,10 +35,9 @@ services:
   # ===============================
   inventory-api:
     build: ./Zipa_Inventario
+    container_name: inventory_api
     restart: always
     command: npm run start:dev
-    # Expose the service port to other services on the Docker network
-    # (don't bind to the host port so multiple replicas can run)
     expose:
       - "3000"
     environment:
@@ -143,11 +142,12 @@ services:
       - backend
       
   # ===============================
-  # Rabbit Notificaciones
+  # RabbitMQ
   # ===============================
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -162,7 +162,7 @@ services:
     container_name: mongo_notificaciones
     restart: always
     ports:
-      - "27018:27017" # expone en otro puerto para no chocar con el mongo de servicios
+      - "27018:27017"
     environment:
       MONGO_INITDB_DATABASE: notificaciones
     volumes:
@@ -178,7 +178,7 @@ services:
     container_name: notificaciones_api
     restart: always
     environment:
-      MONGO_URI: mongodb://mongo:27017/notificaciones
+      MONGO_URI: mongodb://mongo_notificaciones:27017/notificaciones
       RABBITMQ_URI: amqp://rabbitmq:5672
       RABBITMQ_QUEUE: notificaciones_queue
     depends_on:
@@ -188,7 +188,7 @@ services:
       - backend
 
   # ===============================
-  # API Gateway (Flask)
+  # API Gateway (FastAPI)
   # ===============================
   api-gateway:
     build: ./Zipa_APIGateway
@@ -219,3 +219,4 @@ volumes:
   mongo_data:
   user_db_data:
   mongo_notificaciones_data:
+
