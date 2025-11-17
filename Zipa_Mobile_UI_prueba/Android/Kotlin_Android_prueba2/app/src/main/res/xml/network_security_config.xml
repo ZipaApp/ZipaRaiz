@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Base por defecto deniega cleartext -->
+    <base-config cleartextTrafficPermitted="false" />
+
+    <!-- Permitir cleartext SOLO para la IP 10.0.2.2 (emulador -> host) -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
+
