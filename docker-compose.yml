@@ -193,10 +193,10 @@ services:
   # ===============================
   api-gateway:
     build: ./Zipa_APIGateway
-    container_name: api_gateway
+    # container_name: api_gateway
     restart: always
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     environment:
       AUTH_SERVICE_URL: http://auth-api:3000
       INVENTORY_SERVICE_URL: http://inventory-api:3000
