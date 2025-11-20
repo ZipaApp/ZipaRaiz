@@ -13,7 +13,7 @@
 [submodule "Zipa_UI"]
 	path = Zipa_UI
 	url = https://github.com/ZipaApp/Zipa_UI.git
-	branch=develop
+	branch=main
 [submodule "Zipa_DBServicio"]
 	path = Zipa_DBServicio
 	url = https://github.com/ZipaApp/Zipa_DBServicio.git
