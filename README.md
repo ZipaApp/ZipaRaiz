@@ -211,7 +211,7 @@ El sistema está desplegado en un **servidor local**, donde cada componente oper
 ```bash
 git clone --recurse-submodules https://github.com/ZipaApp/ZipaRaiz.git
 ```
-###  2. Construir y montar el contenedor en docker
+### 2. Construir y montar el contenedor en docker
 
 Comando básico:
 ```bash
@@ -221,4 +221,10 @@ docker compose up --build
 Comando con múltiples réplicas para `api-gateway`:
 ```bash
 docker compose up --build --scale api-gateway=3
+```
+
+### 3. Actualizar submódulos si es necesario
+Para actualizar las referencias a los últimos commit:
+```bash
+git submodule update --remote
 ```
