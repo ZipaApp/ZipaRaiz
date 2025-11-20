@@ -211,6 +211,8 @@ El sistema está desplegado en un **servidor local**, donde cada componente oper
 ```bash
 HTTPS:
 git clone --recurse-submodules https://github.com/ZipaApp/ZipaRaiz.git
+```
+```bash
 SSH:
 git clone --recurse-submodules git@github.com:ZipaApp/ZipaRaiz.git
 ```
