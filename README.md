@@ -209,7 +209,10 @@ El sistema está desplegado en un **servidor local**, donde cada componente oper
 ### 1. Clonar el repositorio con submódulos
 
 ```bash
+HTTPS:
 git clone --recurse-submodules https://github.com/ZipaApp/ZipaRaiz.git
+SSH:
+git clone --recurse-submodules git@github.com:ZipaApp/ZipaRaiz.git
 ```
 ### 2. Construir y montar el contenedor en docker
 
