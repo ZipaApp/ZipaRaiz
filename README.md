@@ -1,6 +1,5 @@
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/ZipaLogo.png" alt="Mi logo" style="width:150px; margin-right:20px;">
-  <h1 style="margin: 0;">Prototipo 3 - Atributos de calidad, parte 1</h2>
 </div>
 
 # Zipa: Tienda de productos y servicios para mascotas (PetShop)
