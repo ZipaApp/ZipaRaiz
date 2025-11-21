@@ -1,205 +1,117 @@
 <div style="display: flex; justify-content: center; align-items: center;">
-  <img src="assets/Logo.png" alt="Mi logo" style="width:150px; margin-right:20px;">
+  <img src="assets/ZipaLogo.png" alt="Mi logo" style="width:150px; margin-right:20px;">
+  <h1 style="margin: 0;">Prototipo 3 - Atributos de calidad, parte 1</h2>
 </div>
 
 # Zipa: Tienda de productos y servicios para mascotas (PetShop)
+
 ## Equipo 2D
 - Diego Humberto Lavado González
+- Victor Manuel Torres Alonso
 - Fabián Alejandro Torres Ramos
 - Juan Camilo Daza Gutiérrez
 - Santiago Alfonso Pineda Ceballos
-- Victor Manuel Torres Alonso
 
 ## Descripción general
-El sistema se propone como una plataforma para la gestión de una tienda de mascotas en línea. Permite a los usuarios visualizar y crear órdenes de compra/agendamiento para una variedad de productos y servicios de veterinaria que los dueños de la tienda deseen ofrecer.
+El sistema se propone como una plataforma para la gestión de una tienda de mascotas en línea. Permite a los usuarios visualizar y crear órdenes de compra de productos y agendamiento de servicios, dentro de la variedad que hay en la tienda veterinaria, que sus propietarios deseen ofrecer.
 
-Se contempla para este prototipo la administración de perfiles de usuario, la gestión de inventario de la tienda, la gestión de servicios como peluquería, baño, corte de uñas, etc., la creación de órdenes de compra por parte de usuarios y el control de notificaciones al usuario en caso de cambios en inventario o disponibilidad. Cuenta con interfaz de usuario tanto web como móvil.
+Se contempla para este tercer prototipo la implementación de varios requerimientos no funcionales, principalmente en lo concerniente a calidad y seguridad.  En relación a las funcionalidades de seguridad del sistema ZIPA se han incorporado los patrones como canal seguro, proxy inverso, segmentación a nivel de red y firewall de aplicaciones web.
 
-## Descripción de arquitectura
-El siguiente es el rediseño de la arquitectura del proyecto ZIPA expresado en las 4 vistas requeridas de:
-1. Componentes y Conectores
-2. Despliegue
-3. Capas
-4. Descomposición
+En relación a atributos de calidad se ha incorporado un balanceador de carga mediante software basado en el algoritmo de round-robin y se han realizado varias pruebas de carga y estrés al sistema ZIPA.
 
-En cuanto a lenguajes de programación de propósito general se incorporaron los siguientes:
-- TypeScript para la mayoría de componentes y el front-end web
-- Go para el componente Zipa_OrdenesCompra
-- Python para el componente orquestador (API Gateway)
-- Kotlin para el front-end móvil
 
-El front-end web implementa SSR (Server-Side Rendering) mediante el framework de Nuxt, el cual automáticamente utiliza Vue.js como una capa adicional de renderizado al cliente y la cual se _hidrata_ al recibir interacciones.
+##  Elementos arquitectónicos
+### Estructura de componentes y conectores.
 
-# Arquitectura
 
-## Vista de componentes y conectores
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/C&C_view.png" style="width:1500px;">
 </div>
 
-### Estilo Arquitectónico
-Se hace uso de una arquitectura basada en SOFEA, que divide el sistema en servicios, con su respectiva separación entre frontend y backend. En concreto este prototipo implementa los dos servicios esenciales, **inventario** y **servicios**, incluyendo frontend, backend y bases de datos. Dichos componentes están resaltados en **verde** en el diagrama.
+### Descripción de los elementos arquitectónicos y sus relaciones.
 
+A nivel de presentación se tiene clientes web y móvil (Zipa_UI, Zipa_MobileUI) que se conectan por HTTP al borde, exponiendo la interfaz de usuario y consumiendo APIs; actúan como consumidores de servicios REST.
+En seguridad hay un proxy inverso (Zipa_ReverseProxy) que centraliza TLS/terminación y enrutamiento hacia el Zipa_APIGateway, aplicando políticas de seguridad y balanceo.
+Como puerta de enlace se tiene a Zipa_APIGateway que orquesta llamadas sincronicas HTTP/REST hacia los servicios de dominio (Inventario, Servicios, Notificaciones, Auth, OrdenesCompra) y normaliza contratos y versiones.
+En el componente asíncrono se tienen servicios independientes que implementan lógica de negocio y publican/consumen eventos vía Zipa_Broker para notificaciones y desacoplamiento eventual.
+En persistencia cada servicio tiene su almacenamiento dedicado (relacional o documental) que incluye Redis para tokens, garantizando propiedad de datos, escalabilidad y autonomía de despliegue.
 
-### Identificación de elementos arquitectónicos
-- 5 Componentes y 4 conectores
+### Descripción de los estilos arquitectónicos y patrones usados.
 
+Servicios SOA autónomos y acoplados débilmente con responsabilidad definida por dominio y almacenamiento propio.
+Arquitectura en capas (presentación → gateway → lógica → datos) con proxy inverso y API Gateway para enrutamiento, seguridad y agregación.
+Patrón broker para eventos asíncronos, notificaciones y desacoplamiento eventual; comunicación síncrona por REST cuando se necesita.
 
-### Relaciones entre Componentes
-
-- **Gestión de servicios ↔ Historial de servicios:**  
-  El componente de Gestión de Servicios se conecta a la BD MongoDB usando el protocolo TCP para operaciones de persistencia sobre los datos NoSQL.
-
-- **Gestión de Inventario ↔ Productos:**  
-  El componente de Gestión de Inventarios se conecta al servidor de PosgresQL usando el protocolo TCP para operaciones de persistencia con los datos SQL.
-
-- **User Interface ↔ Gestión de servicios:**  
-  El cliente web consume la API GraphQL expuesta por el componente de Gestión de servicios a través de HTTP en el puerto 8000.
-
-- **User Interface ↔ Gestión de Inventario:**  
-  El cliente web consume la API REST expuesta por el componente de Gestión de Inventario a través de HTTP en el puerto 8001.
-
-## Vista de capas
-<div style="display: flex; justify-content: center; align-items: center;">
-  <img src="assets/Layers_view.png" style="width:1500px;">
-</div>
-
-Siguiendo la forma en la que los componentes están estructurados se divide el sistema en 5 capas físicas (_tiers_):
-1. Capa de presentación: Contiene a los dos componentes de frontend, con los que interactúa el usuario.
-2. Capa de comunicación: Contiene al componente orquestador, que actúa como punto de entrada a todas las peticiones que se realicen desde el frontend.
-3. Capa de lógica: Contiene a los componentes de lógica de negocio.
-4. Capa de comunicación asíncrona: Contiene al componente de mensajería que utilizan los componentes lógicos para comunicarse con el componente de notificaciones.
-5. Capa de datos: Contiene a las bases de datos y asegura su persistencia.
-
-Varios de los componentes también cuentan con capas lógicas (_layers_) para organizar su funcionamiento:
-- El componente Zipa_UI cuenta con SSR, el cual se representa con dos capas lógicas para los elementos de frontend renderizados de lado del cliente como de lado del servidor.
-- Los componentes lógicos y el API Gateway cuentan con controlador (para exponer su interfaz), servicio (que contiene la lógica) y repositorio (para conectar con una base de datos cuando aplica).
-
-## Vista de despliegue
+### Estructura de despliegue
 
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/Deployment_view.png" style="width:1500px;">
 </div>
 
-###  Estructura General del Entorno
+### Descripción de los elementos arquitectónicos y sus relaciones.
 
-El sistema está desplegado en un **servidor local**, donde cada componente opera como un contenedor independiente:
-
-- **Red interna Docker:** permite la comunicación entre servicios usando el puerto común `27017`.
-- **Bases de datos externas:** PostgreSQL, MongoDB y Redis se ejecutan en contenedores separados, enlazados con sus respectivos servicios API.
-
----
-
-####   Frontend
-
-| Componente | Descripción | Puerto |
-|-------------|-------------|--------|
-| **front_web** | Interfaz web construida con Node.js que sirve la aplicación del cliente. | 3000 |
-| **front_mobile** | Aplicación móvil desplegada en un emulador Android, conectada al mismo entorno local. | — |
-
----
-
-####    Backend (Microservicios)
-
-| Servicio | Imagen base | Puerto | Descripción |
-|-----------|--------------|--------|--------------|
-| **inventory_api** | `node:20-alpine` | 8005 | Gestiona productos, stock y categorías del inventario. |
-| **servicios_api** | `node:20-alpine` | 8008 | Maneja los servicios para mascotas (baño, guardería, veterinaria). |
-| **user_api** | `node:20-alpine` | 8009 | Gestiona usuarios, autenticación y roles. |
-| **buyorder_api** | `node:20-alpine` | 8004 | Controla pedidos y órdenes de compra. |
-| **notifications** | `node:20-alpine` | 8010 | Administra las notificaciones asincrónicas hacia los usuarios y administradores. |
-| **api_gateway** | `python:3.11-slim` | 8006 | Orquesta las peticiones entre los microservicios y expone los endpoints unificados hacia el cliente. |
-
----
-
-####    Bases de Datos Asociadas
-
-| Servicio | Imagen | Puerto | Asociado a |
-|-----------|---------|--------|-------------|
-| **postgres_db** | `postgres:15` | 8000 | Servicios generales del sistema. |
-| **mongo_services** | `mongo:7` | 8001 | Módulo de servicios de mascotas. |
-| **postgres_user_db** | `postgres:15` | 8002 | Módulo de usuarios. |
-| **postgres_order_db** | `postgres:15` | 8003 | Módulo de órdenes y compras. |
-| **notlf_db** | `postgres:15` | 8011 | Módulo de notificaciones. |
-| **redis_user_service** | `redis:7` | 8007 | Cacheo y sesiones del servicio de usuarios. |
-
----
-
-####    Conectividad y Red
-
-- Todos los contenedores se comunican dentro de una **red Docker interna** (`27017`).
-- Cada microservicio se conecta únicamente con su base de datos correspondiente.
-- El **API Gateway** actúa como punto de entrada para el frontend, delegando las solicitudes a los microservicios.
-- **Redis** se utiliza como sistema de almacenamiento en memoria para mejorar el rendimiento y manejo de sesiones.
-
----
-
-####    Tecnologías Principales
-
-- **Node.js (v20)** → Backend de los microservicios principales.  
-- **Python 3.11 (Slim)** → API Gateway.  
-- **PostgreSQL 15** → Bases de datos relacionales.  
-- **MongoDB 7** → Almacenamiento de datos no estructurados.  
-- **Redis 7** → Cache y manejo de sesiones.  
-- **Docker Compose** → Orquestación y despliegue de contenedores.
-
----
+Es una vista de arquitectura de servicios contenedorizada, que muestra la distribución física de los componentes sobre la infraestructura local. Los nodos de ejecución son contenedores Docker que representan unidades de despliegue servicios junto con bases de datos. Los artefactos desplegados se ejecutan sobre un servidor local host.
+Las relaciones se modelan como conexiones de red internas (Docker network : 27017) y exposiciones de puertos al host (8000–9000). Se incluyen clientes externos (front_web, front_mobile) que interactúan con los servicios mediante endpoints HTTP.
+Se trata de una vista de despliegue de 
 
 
+### Descripción de los patrones arquitectónicos usados.
 
-## Vista de descomposición
+Vista de despliegue de una arquitectura basada en microservicios, donde cada componente funcional del sistema se implementa como un contenedor independiente dentro de un entorno Docker. Cada servicio se asocia a su propia base de datos, aplicando el patrón de persistencia por servicio. La comunicación entre los contenedores ocurre mediante una red interna de Docker, garantizando aislamiento y control del tráfico. El API Gateway centraliza la entrada de solicitudes, actuando como punto de acceso unificado para los microservicios y gestionando el enrutamiento hacia ellos. Los frontends web y móvil se ejecutan externamente y acceden al ecosistema a través de puertos expuestos en el servidor local. Este enfoque refleja el uso de contenerización e infraestructura inmutable para asegurar despliegues reproducibles y consistentes. La separación clara entre las capas de presentación, lógica y datos refuerza la modularidad del sistema. Asimismo, el uso de imágenes livianas optimiza los recursos del entorno local. En conjunto, la vista ilustra un despliegue típico de arquitectura de microservicios orquestada en un único host mediante Docker Compose.
+
+### Estructura de capas
+
+
+<div style="display: flex; justify-content: center; align-items: center;">
+  <img src="assets/Layers_view.png" style="width:1500px;">
+</div>
+
+### Descripción de los elementos arquitectónicos y sus relaciones.
+
+Esta vista por capas muestra la de presentación (Zipa_UI, Zipa_MobileUI) que invoca al Zipa_APIGateway en la capa de comunicación; el Gateway enruta y orquesta llamadas hacia los microservicios de la capa de lógica (Zipa_Inventario, Zipa_Servicios, Zipa_Auth, Zipa_OrdenesCompra, Zipa_Notificaciones), donde cada servicio tiene internamente controlador → servicio → repositorio y persiste en su almacén dedicado. La capa de comunicación asíncrona está representada por un Broker (RabbitMQ) usado por los servicios para publicar/consumir eventos, y la capa de datos agrupa las bases (Postgres/Mongo/Redis) que sirven como persistencia por servicio.
+
+### Descripción de los patrones arquitectónicos usados.
+
+Se aplican los patrones de arquitectura de capas y microservicios con separación de responsabilidades; un API Gateway central para entrada y enrutamiento; patrón interno controller–service–repository en cada servicio para organización y acceso a datos; pub/sub mediante Broker para comunicación asincrónica y desacoplamiento eventual; y persistencia políglota (database-per-service) para autonomía y escalado independiente.
+
+### Estructura de descomposición
+
 
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="assets/Decomp_view.png" style="width:1500px;">
 </div>
 
-### Elementos y Relaciones Arquitectónicas
+### Descripción de los elementos arquitectónicos y sus relaciones.
 
-#### **Módulo de Gestión de Productos**
-**Propósito:** Administra todas las operaciones relacionadas con los productos disponibles en la plataforma, permitiendo su control, visualización y mantenimiento.  
-**Funciones principales:** Incluye la visualización de los productos registrados, la adición de nuevos productos, la modificación de información existente y la eliminación de productos obsoletos o inactivos.  
-**Relaciones:** Se comunica con el Módulo de Órdenes de Compra para validar la disponibilidad de productos en los procesos de compra y con el Módulo de Notificaciones para informar sobre cambios en el inventario o actualizaciones relevantes.
+Esta vista de descomposición muestra a Zipa desglosado en subsistemas funcionales como son Gestión de productos (ver, agregar, modificar, eliminar), Gestión de servicios (listar, registrar, modificar, eliminar), Gestión de usuarios (registrar usuario, registrar mascota, registrar métodos de pago), Gestión de órdenes de compra (agregar, actualizar, cancelar, consultar estado) y Gestión de notificaciones (escuchar eventos, enviar correos, gestionar plantillas, guardar historial). Cada subsistema expone operaciones o casos de uso concretos y se conecta conceptualmente con el resto mediante llamadas a funciones/servicios y eventos del sistema, de modo que las acciones del dominio fluyen desde el nodo raíz hacia las hojas funcionales.
+La vista aplica patrones de descomposición por dominio y vertical slicing (cada módulo encapsula sus casos de uso y CRUD asociados), enfatiza separación de responsabilidades y cohesion alta dentro de cada subsistema, y usa pub/sub para la gestión de notificaciones como mecanismo de desacoplamiento. Es coherente con enfoques DDD/ bounded-context y con microservicios/servicios autónomos en cuanto cada área puede implementarse y desplegarse de forma independiente.
 
----
+## Atributos de calidad
+### Seguridad
 
-#### **Módulo de Gestión de Servicios**
-**Propósito:** Gestiona los servicios ofrecidos dentro del ecosistema de Zipa, como atención veterinaria, aseo, hospedaje o paseos.  
-**Funciones principales:** Permite registrar, modificar y eliminar servicios, así como consultar los servicios activos en la plataforma.  
-**Relaciones:** Interactúa con el Módulo de Usuarios para vincular los servicios con sus prestadores y clientes, y con el Módulo de Notificaciones para comunicar confirmaciones o recordatorios sobre la reserva o modificación de servicios.
+Escenario 1: Canal Seguro
 
----
+![](assets/Security_scenario_1.png)
 
-#### **Módulo de Gestión de Usuarios**
-**Propósito:** Administra el registro, autenticación y mantenimiento de la información de los usuarios, incluyendo clientes, administradores y proveedores.  
-**Funciones principales:** Permite registrar usuarios, registrar mascotas asociadas y agregar métodos de pago para facilitar las transacciones dentro del sistema.  
-**Relaciones:** Se comunica con el Módulo de Órdenes de Compra para asociar la identidad del comprador con sus transacciones, y con el Módulo de Notificaciones para enviar alertas, correos de confirmación o mensajes relacionados con la cuenta del usuario.
+Escenario 2: Segmentación de Red
 
----
+![](assets/Security_scenario_2.png)
 
-#### **Módulo de Gestión de Órdenes de Compra**
-**Propósito:** Controla el flujo completo de las órdenes de compra, desde su creación hasta su actualización o cancelación, garantizando la integridad de los datos y la trazabilidad de las transacciones.  
-**Funciones principales:** Permite agregar nuevas órdenes, actualizar información existente, cancelar operaciones y consultar el estado actual de cada orden.  
-**Relaciones:** Depende de los módulos de Productos, Servicios y Usuarios para obtener información necesaria durante la creación o actualización de órdenes. Se comunica con el Módulo de Notificaciones para enviar confirmaciones, actualizaciones y avisos sobre el estado de las órdenes.
+Escenario 3: Proxy Inverso
 
----
+![](assets/Security_scenario_3.png)
 
-#### **Módulo de Gestión de Notificaciones**
-**Propósito:** Centraliza la gestión de todos los eventos comunicativos del sistema, garantizando que los usuarios y los servicios reciban notificaciones en tiempo real o de forma diferida según corresponda.  
-**Funciones principales:** Escucha los eventos generados por otros módulos del sistema, envía correos electrónicos a los usuarios, gestiona plantillas de mensajes y mantiene un historial de notificaciones.  
-**Relaciones:** Recibe información de todos los módulos funcionales mediante comunicación asíncrona o eventos internos, con el fin de enviar alertas, confirmaciones y recordatorios. Opera de forma desacoplada para no interferir con los procesos principales del sistema.
+Escenario 4: Uso de JWT
 
----
+![](assets/Security_scenario_4.png)
 
-#### **Relaciones Generales entre Módulos**
-- **Usuarios ↔ Órdenes:** asociación de identidad, medios de pago y control de transacciones.  
-- **Productos / Servicios ↔ Órdenes:** vinculación de elementos seleccionados con el flujo de compra o reserva.  
-- **Órdenes ↔ Notificaciones:** envío de confirmaciones y actualizaciones del estado de las órdenes.  
-- **Global ↔ Notificaciones:** todos los módulos pueden emitir eventos que desencadenan notificaciones, lo cual refuerza la comunicación asincrónica y la independencia funcional.
+### Rendimiento y escalabilidad
 
+Escenario 1: Balanceador de carga
 
-# Instrucciones para despliegue del software de manera local
+![](assets/Performance_scenario_1.png)
 
-## Requisitos previos
+## Requisitos previos de instalación
 1. **Git** instalado y accesible desde la terminal.
 2. **Docker** y **Docker Compose** instalados y configurados correctamente.
 3. **WSL** instalado si el sistema se ejecutará en Windows.
@@ -208,28 +120,31 @@ El sistema está desplegado en un **servidor local**, donde cada componente oper
 
 ### 1. Clonar el repositorio con submódulos
 
-```bash
 HTTPS:
+```bash
 git clone --recurse-submodules https://github.com/ZipaApp/ZipaRaiz.git
 ```
-```bash
+
 SSH:
+```bash
 git clone --recurse-submodules git@github.com:ZipaApp/ZipaRaiz.git
 ```
-### 2. Construir y montar el contenedor en docker
 
-Comando básico:
+###  2. Construir y montar el contenedor en docker
+
+Construcción inicial:
 ```bash
 docker compose up --build
 ```
 
-Comando con múltiples réplicas para `api-gateway`:
+Construcción con múltiples réplicas para el `api-gateway`:
 ```bash
 docker compose up --build --scale api-gateway=3
 ```
 
 ### 3. Actualizar submódulos si es necesario
-Para actualizar las referencias a los últimos commit:
+
+Para actualizar a los últimos commit de cada submódulo:
 ```bash
 git submodule update --remote
 ```
